@@ -49,6 +49,21 @@ Add the same `url` as specified in `Step 2.` above. You need to map it to your h
 
 NB: `tutuka.trial.app` is the url I chose to use, you can use any that you like.
 
+### Step 5.
+Run the following command since it is on your local host to setup the app and the databases as well with a test user account.
+
+```bash
+php artisan migrate:refresh --seed
+```
+
+Just remember that you need to run this command only once.
+
+The default credentials to access the dashboard are
+`Username`: `richard@tutuka.com`
+`Password`: `default1234$`
+
+You can create your own user by signing up. Or you can change the details found in the seeder `database/seeds/UsersTableSeeder.php`. Your choice.
+
 ### Test That It Works
 Visit `tutuka.trial.app` or your chosen `url` in your browser. In this case,
 `https://tutuka.trial.app`.
