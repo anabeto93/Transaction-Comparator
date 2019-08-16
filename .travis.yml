@@ -14,7 +14,7 @@ before_script:
   - php artisan migrate:refresh --seed
 
 before_install:
-  - mysql -e 'CREATE DATABASE homestead_test;
+  - mysql -e 'CREATE DATABASE homestead_test;'
 
 script:
   - vendor/bin/phpunit
