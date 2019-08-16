@@ -10,8 +10,5 @@ before_script:
   - php artisan key:generate
   - php artisan migrate:refresh --seed
 
-before_install:
-  - mysql -e 'create database homestead_test;'
-
 script:
   - vendor/bin/phpunit
