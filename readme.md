@@ -70,6 +70,11 @@ Visit `tutuka.trial.app` or your chosen `url` in your browser. In this case,
 
 NB: One of the reasons for choosing `homestead` is because it serves Laravel projects with `SSL/TLS` by default.
 
+## Additional Notes
+You can ignore the above steps and simply run `php artisan serve` to run the application which will be served at `http://127.0.0.1:8000`
+
+But security purposes, following the above steps is strongly advised.
+
 ## Testing
 To test the functionalities of this project, simply run `./phpunit`.
 
