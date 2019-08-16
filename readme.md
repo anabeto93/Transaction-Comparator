@@ -61,3 +61,6 @@ To test the functionalities of this project, simply run `./phpunit`.
 There is a shell script in the root directory which will handle this and you can pass additional arguments to it.
 
 This project is already been tested before deployment using [Travis](https://travis-ci.org/)
+
+## Badges
+[![Build Status](https://travis-ci.org/anabeto93/Transaction-Comparator.svg?branch=master)](https://travis-ci.org/anabeto93/Transaction-Comparator)
