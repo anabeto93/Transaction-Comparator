@@ -3,12 +3,18 @@ language: php
 php:
   - "7.2"
 
+services:
+  - mysql
+
 before_script:
   - cp .env.travis .env
   - composer self-update
   - composer install --no-interaction
   - php artisan key:generate
   - php artisan migrate:refresh --seed
+
+before_install:
+  - mysql -e 'CREATE DATABASE homestead_test;
 
 script:
   - vendor/bin/phpunit
