@@ -9,15 +9,15 @@ Feature: Authentication
 
   @authentication
   Scenario: Logging in with Success
-    Given a user called "Richard Opoku" with email "richard@tutuka.com" and password "Pass1234$" exists
-    And I am logged out
+    Given I am logged out
+    And a user called "Richard Opoku" with email "richard@tutuka.com" and password "Pass1234$" exists
     And I visit the path "/login"
     And I fill in the form with the email "richard@tutuka.com" and password "Pass1234$" and submit the form
     Then I should see the text "Tutuka Trial Project"
 
   Scenario: User with wrong credentials fails
-    Given a user called "Richard Opoku" with email "richard@tutuka.com" and password "Pass1234$" exists
-    And I am logged out
+    Given I am logged out
+    And a user called "Richard Opoku" with email "richard@tutuka.com" and password "Pass1234$" exists
     And I visit the path "/login"
     And I fill in the form with the email "richard@tutuka.com" and password "password" and submit the form
     Then I should see the text "These credentials do not match our records."

@@ -79,6 +79,7 @@ class FeatureContext extends MinkContext implements Context
     public function logoutUser()
     {
         $this->visitPath('/logout');
+        Artisan::call('migrate:refresh');
     }
 
     /** @Given I fill in the form with the email :email and password :password and submit the form */
