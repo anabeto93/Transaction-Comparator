@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AuthTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     function test_right_registration_blade_returned()
     {
