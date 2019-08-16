@@ -12,7 +12,7 @@ return [
 
         'mysql' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'localhost'),
+            'host'      => env('DB_HOST', '127.0.0.1'),
             'database'  => env('DB_DATABASE', 'homestead'),
             'username'  => env('DB_USERNAME', 'homestead'),
             'password'  => env('DB_PASSWORD', 'secret'),
@@ -24,7 +24,7 @@ return [
 
         'testing' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_TEST_HOST', 'localhost'),
+            'host'      => env('DB_TEST_HOST', '127.0.0.1'),
             'database'  => env('DB_TEST_DATABASE', 'homestead_test'),
             'username'  => env('DB_TEST_USERNAME', 'homestead'),
             'password'  => env('DB_TEST_PASSWORD', 'secret'),
