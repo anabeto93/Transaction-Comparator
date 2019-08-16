@@ -16,6 +16,8 @@ This can also be of help if you are on Windows.
 
 [Larvel Homestead Windows 10](https://medium.com/@eaimanshoshi/i-am-going-to-write-down-step-by-step-procedure-to-setup-homestead-for-laravel-5-2-17491a423aa)
 
+[Official Laravel Homestead](https://laravel.com/docs/5.8/homestead)
+
 ### Step 1.
 Follow the above instructions and add it to a path homestead can serve it from.
 
@@ -24,6 +26,7 @@ Clone the project to a directory and run the following commands.
 ```bash
 composer install
 cp .env.example .env
+php artisan key:generate
 ```
 
 ### Step 2.
