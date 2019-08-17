@@ -96,6 +96,7 @@
                         <th scope="col">Date</th>
                         <th scope="col">Reference</th>
                         <th scope="col">Amount</th>
+                        <th scope="col">Similarity Advice</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -104,6 +105,7 @@
                         <td>1</td>
                         <td>2</td>
                         <td>3</td>
+                        <td>Advice of Similarity</td>
                     </tr>
                     </tbody>
                 </table>
@@ -116,6 +118,7 @@
                         <th scope="col">Date</th>
                         <th scope="col">Reference</th>
                         <th scope="col">Amount</th>
+                        <th scope="col">Advice</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -124,6 +127,7 @@
                         <td>1</td>
                         <td>2</td>
                         <td>3</td>
+                        <td>Advice of Similarity</td>
                     </tr>
                     </tbody>
                 </table>

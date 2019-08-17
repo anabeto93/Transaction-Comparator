@@ -29,8 +29,8 @@ class TransactionFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'csv_file1' => 'required|file|max:102400',
-            'csv_file2' => 'required|file|max:102400'
+            'csv_file1' => 'required|file|mimes:csv,txt|max:102400',
+            'csv_file2' => 'required|file|mimes:csv,txt|max:102400'
         ];
     }
 }

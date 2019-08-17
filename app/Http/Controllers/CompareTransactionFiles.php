@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\TransactionComparatorInterface;
+use App\Repositories\Transaction\TransactionComparatorInterface;
 use App\Http\Requests\TransactionFormRequest;
 use Illuminate\Http\Request;
 
@@ -20,6 +20,6 @@ class CompareTransactionFiles extends Controller
     {
         $response = $this->comparator->compare($request);
 
-        return view('home')->withResults($response['results'])->withReports($response['reports']);
+        return view('home')->withResults($response['results'])->withReports($response['reports'])->withNames($response['names']);
     }
 }
