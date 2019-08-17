@@ -96,7 +96,7 @@
                         <th scope="col">Date</th>
                         <th scope="col">Reference</th>
                         <th scope="col">Amount</th>
-                        <th scope="col">Similarity Advice</th>
+                        <th scope="col">Similar Reference</th>
                     </tr>
                     </thead>
                     <tbody>
