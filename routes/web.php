@@ -19,3 +19,5 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/logout', 'Auth\LoginController@logout');
+Route::post('compare/transaction/files', 'CompareTransactionFiles')->name('transactions.compare');
+Route::post('upload/csv/files', 'UploadTransactionCSVFiles')->name('storeMedia');
