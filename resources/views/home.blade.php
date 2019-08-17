@@ -10,23 +10,23 @@
                 <h4>Select Files To Compare</h4>
                 <div class="col-md-6">
                     <div class="control-fileupload" id="file1">
-                        <label for="csv-file1">Choose File 1: </label>
-                        <input type="file" name="csv-file1" id="csv-file1" accept=".csv">
+                        <label for="csv_file1">Choose File 1: </label>
+                        <input type="file" name="csv_file1" id="csv_file1" accept=".csv">
                     </div>
-                    @if($errors->has('csv-file1'))
+                    @if($errors->has('csv_file1'))
                     <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('csv-file1') }}</strong>
+                        <strong>{{ $errors->first('csv_file1') }}</strong>
                     </span>
                     @endif
                 </div>
                 <div class="col-md-6">
                     <div class="control-fileupload" id="file2">
-                        <label for="csv-file2">Choose File 2: </label>
-                        <input type="file" name="csv-file2" id="csv-file2" accept=".csv">
+                        <label for="csv_file2">Choose File 2: </label>
+                        <input type="file" name="csv_file2" id="csv_file2" accept=".csv">
                     </div>
-                    @if($errors->has('csv-file2'))
+                    @if($errors->has('csv_file2'))
                         <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('csv-file2') }}</strong>
+                            <strong>{{ $errors->first('csv_file2') }}</strong>
                         </span>
                     @endif
                 </div>
@@ -138,7 +138,7 @@
 
 <script>
     window.onload = function() {
-        $.each(['#csv-file1','#csv-file2'], function(i, id) {
+        $.each(['#csv_file1','#csv_file2'], function(i, id) {
             $(id).change(function(){
                 let t = $(this).val();
                 let labelText = 'File : ' + t.substr(12, t.length);
