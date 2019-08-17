@@ -91,7 +91,7 @@
         <h4>Unmatched Report</h4>
         <div class="file-report-table">
             <span class="file_name">{{ $names['file1'] }}</span>
-            <table class="table table-striped">
+            <table class="table table-striped" id="table1">
                 <thead>
                 <tr>
                     <th scope="col">Date</th>
@@ -115,7 +115,7 @@
         </div>
         <div class="file-report-table">
             <span class="file_name">{{ $names['file2'] }}</span>
-            <table class="table table-striped">
+            <table class="table table-striped" id="table2">
                 <thead>
                 <tr>
                     <th scope="col">Date</th>
@@ -142,7 +142,8 @@
 @endsection
 
 @push('scripts')
-
+<script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer></script>
+<script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js" defer></script>
 <script>
     window.onload = function() {
         $.each(['#csv_file1','#csv_file2'], function(i, id) {
@@ -157,11 +158,15 @@
         $('#reportBtn').on('click', function() {
             $('#unmatchedReportSection').css({ 'display': 'flex'})
         })
+        $.each(['#table1','#table2'], function(i, id) {
+            $(id).DataTable()
+        })
     }
 </script>
 @endpush
 
 @push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
 <style>
     .row-section {
         border: 1px solid #95999c;
@@ -199,7 +204,7 @@
         width: 100%;
         height: 36px;
         line-height: 36px;
-        padding: 0px 10px 2px 10px;
+        padding:0 10px 2px 10px;
         overflow: hidden;
         position: relative;
         /* File upload button */
@@ -256,7 +261,7 @@
         position: relative;
         z-index: 1;
         margin-right: 90px;
-        margin-bottom: 0px;
+        margin-bottom:0;
         cursor: text;
     }
     .results-section {
