@@ -53,9 +53,9 @@
                             <span>Unmatched Records:</span>
                         </div>
                         <div class="col-md-6 data-section">
-                            <span>1</span>
-                            <span>1</span>
-                            <span>1</span>
+                            <span>{{ $results['file1']['total'] }}</span>
+                            <span>{{ $results['file1']['matching'] }}</span>
+                            <span>{{ $results['file1']['unmatched'] }}</span>
                         </div>
                     </div>
 
@@ -69,9 +69,9 @@
                             <span>Unmatched Records:</span>
                         </div>
                         <div class="col-md-6 data-section">
-                            <span>2</span>
-                            <span>2</span>
-                            <span>2</span>
+                            <span>{{ $results['file2']['total'] }}</span>
+                            <span>{{ $results['file2']['matching'] }}</span>
+                            <span>{{ $results['file2']['unmatched'] }}</span>
                         </div>
                     </div>
                 </div>
@@ -83,59 +83,62 @@
             </div>
         </div>
     </div>
-
-        @if(isset($reports) && is_array($reports))
-        <!-- Unmatched Reports Section -->
-        <div class="row row-section" id="unmatchedReportSection">
-            <h4>Unmatched Report</h4>
-            <div class="file-report-table">
-                <span class="file_name">File 1.CSV</span>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Reference</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Similar Reference</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row"></th>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>Advice of Similarity</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="file-report-table">
-                <span class="file_name">File 1.CSV</span>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Reference</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Advice</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row"></th>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>Advice of Similarity</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        @endif
     @endif
 </div>
+@if(isset($reports) && is_array($reports) && isset($names) && is_array($names))
+    <!-- Unmatched Reports Section -->
+    <div class="row row-section" id="unmatchedReportSection">
+        <h4>Unmatched Report</h4>
+        <div class="file-report-table">
+            <span class="file_name">{{ $names['file1'] }}</span>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Reference</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Similar Reference</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($reports['file1'] as $report)
+                    <tr>
+                        {{--<th scope="row"></th>--}}
+                        <td>{{ $report['date'] }}</td>
+                        <td>{{ $report['reference'] }}</td>
+                        <td>{{ $report['amount'] }}</td>
+                        <td>{{ $report['advice'] }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="file-report-table">
+            <span class="file_name">{{ $names['file2'] }}</span>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Reference</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Advice</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($reports['file2'] as $report)
+                    <tr>
+                        {{--<th scope="row"></th>--}}
+                        <td>{{ $report['date'] }}</td>
+                        <td>{{ $report['reference'] }}</td>
+                        <td>{{ $report['amount'] }}</td>
+                        <td>{{ $report['advice'] }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endif
 @endsection
 
 @push('scripts')
@@ -291,6 +294,7 @@
     }
     #unmatchedReportSection {
         display: none;
+        font-size: 12px;
     }
     .invalid-feedback {
         display: inline-block;
