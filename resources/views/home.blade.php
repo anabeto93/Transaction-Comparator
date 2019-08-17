@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <!-- Files Upload Section -->
-    <div class="row">
+    <div class="row row-section">
         <form action="{{ route('transactions.compare') }}" method="POST" enctype="multipart/form-data"  class="col-md-10 offset-md-1">
             @csrf
             <div class="row">
@@ -13,12 +13,22 @@
                         <label for="csv-file1">Choose File 1: </label>
                         <input type="file" name="csv-file1" id="csv-file1" accept=".csv">
                     </div>
+                    @if($errors->has('csv-file1'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('csv-file1') }}</strong>
+                    </span>
+                    @endif
                 </div>
                 <div class="col-md-6">
                     <div class="control-fileupload" id="file2">
                         <label for="csv-file2">Choose File 2: </label>
                         <input type="file" name="csv-file2" id="csv-file2" accept=".csv">
                     </div>
+                    @if($errors->has('csv-file2'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('csv-file2') }}</strong>
+                        </span>
+                    @endif
                 </div>
             </div>
             <div class="row">
@@ -30,7 +40,7 @@
     </div>
     @if(isset($results) && is_array($results))
     <!-- Comparison Results Section -->
-    <div class="row">
+    <div class="row row-section">
         <div class="col-md-10 offset-md-1">
             <h4>Comparison Results</h4>
             <div class="row results-section">
@@ -76,7 +86,7 @@
 
         @if(isset($reports) && is_array($reports))
         <!-- Unmatched Reports Section -->
-        <div class="row" id="unmatchedReportSection">
+        <div class="row row-section" id="unmatchedReportSection">
             <h4>Unmatched Report</h4>
             <div class="file-report-table">
                 <span class="file_name">File 1.CSV</span>
@@ -146,6 +156,12 @@
 
 @push('styles')
 <style>
+    .row-section {
+        border: 1px solid #95999c;
+        border-radius: .65rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
     .row h4 {
         display: block;
         width: 100%;
@@ -271,6 +287,9 @@
     }
     #unmatchedReportSection {
         display: none;
+    }
+    .invalid-feedback {
+        display: inline-block;
     }
 </style>
 @endpush
