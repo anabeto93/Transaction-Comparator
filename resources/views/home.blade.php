@@ -38,14 +38,14 @@
             </div>
         </form>
     </div>
-    @if(isset($results) && is_array($results))
+    @if(isset($results) && is_array($results) && isset($names) && is_array($names))
     <!-- Comparison Results Section -->
     <div class="row row-section">
         <div class="col-md-10 offset-md-1">
             <h4>Comparison Results</h4>
             <div class="row results-section">
                 <div class="col-md-5 file-details">
-                    <span class="file_name">File1.csv</span>
+                    <span class="file_name">{{ $names['file1'] }}</span>
                     <div class="row">
                         <div class="col-md-6">
                             <span>Total Records:</span>
@@ -61,7 +61,7 @@
 
                 </div>
                 <div class="col-md-5 file-details">
-                    <span class="file_name">File2.csv</span>
+                    <span class="file_name">{{ $names['file2'] }}</span>
                     <div class="row">
                         <div class="col-md-6">
                             <span>Total Records:</span>
