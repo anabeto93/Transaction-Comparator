@@ -162,7 +162,7 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
      * @param string $transaction
      * @return array
      */
-    protected function convertTransactionToArray($transaction): array
+    public function convertTransactionToArray($transaction): array
     {
         $result = explode(',', $transaction);
         //remove the first and last parts which might be empty
@@ -184,12 +184,12 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
      * @param string $second
      * @return array
      */
-    protected function findDifferenceInTransactions($first, $second): array
+    public function findDifferenceInTransactions($first, $second): array
     {
         $transaction_one = $this->convertTransactionToArray($first);
         $transaction_two = $this->convertTransactionToArray($second);
 
-        $diffTest = $this->diff($transaction_one, $transaction_two);
+        $diffTest = diff_in_arrays($transaction_one, $transaction_two);
         unset($diffTest[0]); unset($diffTest[count($transaction_one)+1]);
 
         return $diffTest;
@@ -244,32 +244,5 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
         }
 
         return $r;
-    }
-
-    /*
-        Paul's Simple Diff Algorithm v 0.1
-        (C) Paul Butler 2007 <http://www.paulbutler.org/>
-        //No need reinventing the wheel here, slight modifications to work here
-    */
-    protected function diff($old, $new){
-        $matrix = array();
-        $maxlen = 0;
-        foreach($old as $oindex => $ovalue){
-            $nkeys = array_keys($new, $ovalue);
-            foreach($nkeys as $nindex){
-                $matrix[$oindex][$nindex] = isset($matrix[$oindex - 1][$nindex - 1]) ?
-                    $matrix[$oindex - 1][$nindex - 1] + 1 : 1;
-                if($matrix[$oindex][$nindex] > $maxlen){
-                    $maxlen = $matrix[$oindex][$nindex];
-                    $omax = $oindex + 1 - $maxlen;
-                    $nmax = $nindex + 1 - $maxlen;
-                }
-            }
-        }
-        if($maxlen == 0) return array(array('d'=>$old, 'i'=>$new));
-        return array_merge(
-            $this->diff(array_slice($old, 0, $omax), array_slice($new, 0, $nmax)),
-            array_slice($new, $nmax, $maxlen),
-            $this->diff(array_slice($old, $omax + $maxlen), array_slice($new, $nmax + $maxlen)));
     }
 }
