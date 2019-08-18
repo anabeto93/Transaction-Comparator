@@ -56,107 +56,102 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
             }
         }
 
-        //get equal contents of both files
-        $equal = false;
-        if(count($file_contents[0]) === count($file_contents[1])) {
-            $equal = true;
-        }
+        //form the two groups of remnants to test against
+        $group_one = $file_contents[0];
+        $group_two = $file_contents[1];
 
-        $primary_file = null;
-        $secondary_file = null;
-        $larger_file_index = null;
-
-        if(!$equal) {
-            if(count($file_contents[1]) > count($file_contents[0])) {
-                $eq_size = array_slice($file_contents[1], 0,count($file_contents[0]));
-                $remnant = array_slice($file_contents[1], count($file_contents[0]) - count($file_contents[1]));
-                $smaller = $secondary_file = $file_contents[0];
-                $primary_file = $file_contents[1];
-                $larger_file_index = 1;
-            }else {
-                $eq_size = array_slice($file_contents[0], 0,count($file_contents[1]));
-                $remnant = array_slice($file_contents[0], count($file_contents[1]) - count($file_contents[0]));
-                $smaller = $secondary_file = $file_contents[1];
-                $primary_file = $file_contents[0];
-                $larger_file_index = 0;
-            }
-
-            //merge the two arrays to get the final differences between the two files
-            $differences = array_merge(array_values(array_diff_assoc($eq_size, $smaller)), array_values($remnant));
-
-            //the unmatched differences
-            foreach($result as $key => $file) {
-                $index = $key === 'file1' ? 0: 1;
-
-                $result[$key]['total'] = count($file_contents[$index]);//accurate for either file
-
-                if($larger_file_index === $index) {
-                    //dealing with the larger file
-                    $result[$key]['matching'] = intval(count($file_contents[$index]) - count($differences));
-                    $result[$key]['unmatched'] = count($differences);
-                }else {
-                    //dealing with the smaller file
-                    $result[$key]['matching'] = intval(count($smaller) - count(array_diff_assoc($eq_size, $smaller)));
-                    $result[$key]['unmatched'] = count(array_diff_assoc($eq_size, $smaller));
+        //compare each transaction from group_one against those in group_two, starting from the top, do this n times where n=size_of($group_one)
+        foreach($group_one as $i => $transaction) {
+            foreach($group_two as $j => $other_transaction) {
+                //going by the assumption that transactions match 'perfectly' find the exact match
+                if($transaction === $other_transaction) {
+                    //a match has been found, now remove them from both groups to reduce the sample set
+                    unset($group_one[$i]);
+                    //$group_one = array_values($group_one);
+                    unset($group_two[$j]);
+                    $group_two =  array_values($group_two);//reduce the size of group_two
                 }
             }
-        }else {
-            //find the differences between the two equal file contents
-            $differences = array_diff_assoc($file_contents[0], $file_contents[1]);
-
-            //the unmatched differences
-            foreach($result as $key => $file) {
-                $index = $key === 'file1' ? 0: 1;
-                $result[$key]['total'] = count($file_contents[$index]);
-                $result[$key]['matching'] = intval(count($file_contents[$index]) - count($differences));
-                $result[$key]['unmatched'] = count($differences);
-            }
-            //either can be the primary and secondary when they are equal in size
-            $primary_file = $file_contents[0];
-            $secondary_file = $file_contents[1];
-            //either can serve as large_file_index
-            $larger_file_index = 0;
         }
+        //remnants after removing all
+        $group_one = array_values($group_one);
 
-        if(count($differences) > 0) {
-            //there are differences that need to be sorted out
-            foreach ($differences as $pkey => $current_transaction) {
-                //try finding the most similar or closest transaction
-                $similarities = [
-                    'similarity' => 0,//assume initially no similarity with any
-                    'index' => 0,
+        $result = [
+            'file1' => [
+                'total' => count($file_contents[0]),
+                'matching' => count($file_contents[0]) - count($group_one),
+                'unmatched' => count($group_one)
+            ],
+            'file2' => [
+                'total' => count($file_contents[1]),
+                'matching' => count($file_contents[1]) - count($group_two),
+                'unmatched' => count($group_two)
+            ]
+        ];
+
+        //NB: This section below is not really necessary if one of the remnant groups is empty
+        //find the similarities and where there are possibilities of matching
+        foreach([$group_one, $group_two] as $i => $group) {
+            if($i===0) {
+                $index = 1; $other_file = 'file2'; $current_file = 'file1';
+            } else {
+                $index = 0; $other_file = 'file1'; $current_file = 'file2';
+            }
+
+            if(count($group) <= 0) {
+                //create the report and move on
+                $reports[$current_file] = [
+                    //no report to give here
                 ];
 
-                //run it against each other transaction in the secondary file
-                foreach ($secondary_file as $skey => $secondary_transaction) {
-                    $temp = $this->findDifferenceInTransactions($current_transaction, $secondary_transaction);
+                continue;
+            }
+
+            //the remnant here will be checking against the other group to see possible matches
+            $other_group = $file_contents[$index];
+
+            //compare each member of the current group against the members of the other_group
+            foreach($group as $j => $member) {
+                //current similarities
+                $similarity = [
+                    'index' => 0,
+                    'percentage' => 0
+                ];
+                foreach($other_group as $k => $transaction) { //This level of nesting is pretty bad
+                    $temp = $this->findDifferenceInTransactions($member, $transaction);
                     $new_sim = $this->computeSimilarity($temp);
 
-                    if($new_sim > $similarities['similarity']) {
-                        //set it as the new most similar transaction
-                        $similarities['similarity'] = $new_sim;
-                        $similarities['index'] = $skey;
+                    //check for the highest and most similar transaction
+                    if($new_sim > $similarity['percentage']) {
+                        $similarity['percentage'] = $new_sim;
+                        $similarity['index'] = $k;
                     }
                 }
 
-                //generate report and proceed
-                $r = $this->generateReportForTransactions($similarities['similarity'], $current_transaction, $secondary_file[$similarities['index']]);
-                $r['temp'] = $temp;
+                //ensure that the highest percentage obtained is above 80% else it ain't worth it
+                if($similarity['percentage'] > 80) {
+                    $r = $this->generateReportForTransactions($similarity['percentage'],$member, $other_group[$similarity['index']]);
 
-                if($larger_file_index === 0) {
-                    array_push($reports['file1'], $r);
-                } else {
-                    array_push($reports['file2'], $r);
+                    array_push($reports[$current_file], $r);
+                }else {
+                    $c_t = $this->convertTransactionToArray($member);
+
+                    $r = [
+                        'date' => $c_t[1],
+                        'reference' => $c_t[5], //which is the transaction_id
+                        'amount' => $c_t[2],
+                        'advice' => 'Matches None',
+                    ];
+
+                    array_push($reports[$current_file], $r);
                 }
             }
         }
 
         //Delete the files from storage before moving on
         foreach($names as $name) {
-            Storage::disk('local')->delete($name);
+            Storage::disk('local')->delete('transactions/'.$name);
         }
-
-        $reports = $this->cleanUpTheFinalReportForBothFiles($reports, $differences, $file_contents[1]);
 
         return ['results' => $result, 'reports' => $reports, 'names' => $original_names];
 
@@ -241,7 +236,7 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
             'date' => $c_t[1],
             'reference' => $c_t[5], //which is the transaction_id
             'amount' => $c_t[2],
-            'advice' => 'None',
+            'advice' => 'Matches None',
         ];
 
         if($percentage !== 0 && $percentage > 50) {//above 50 is good enough
@@ -250,72 +245,6 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
 
         return $r;
     }
-
-    /**
-     * @param array $reports
-     * @param array $differences
-     * @param array $second_file_contents
-     * @return array
-     */
-    protected function cleanUpTheFinalReportForBothFiles($reports, $differences, $second_file_contents): array
-    {
-        //Assumption here is, some other transaction in file1 must have an advice that references the current transaction
-        foreach (array_keys($differences) as $ikey => $array_key) {
-            try {
-                $current = $second_file_contents[$array_key];
-            }catch (\Exception $e) {
-                //no matching transaction
-                $reports['file2'][$ikey] = [
-                    'data' => null,
-                    'reference' => null,
-                    'amount' => null,
-                    'advice' => 'None'
-                ];
-
-                continue;
-            }
-            //find the one whose advice is the reference of the current transaction
-            $c_t = $this->convertTransactionToArray($current);
-
-            $found = false;
-            $index = 0;
-
-            do{
-                $report = $reports['file1'][$index++];
-
-                if( $report['advice'] === $c_t[5]) {
-                    $found = true;
-                    //change both advices
-                    $ref = 'REF: '.$report['reference'].' ';
-
-                    //in order to be fancy, find the keys or indices where they differ
-                    $differs= 'DIFF_BY: '; $column_names = ['Profile','Date','Amount','Narrative','Description','ID', 'Type', 'WalletReference'];
-                    foreach($report['temp'] as $k => $t) {
-                        if(is_array($t)) {
-                            $differs .= $column_names[$k-1].',';
-                        }
-                    }
-
-                    $final_ref = $ref.$differs;
-
-                    $reports['file2'][$ikey] = [
-                        'date' => $c_t[1],
-                        'reference' => $c_t[5],
-                        'amount' => $c_t[2],
-                        'advice' => $final_ref
-                    ];
-
-
-                    //modify the original report
-                    unset($reports['file1'][$index-1]['temp']);
-                    $reports['file1'][$index-1]['advice'] = 'REF: '.$reports['file1'][$index-1]['advice'].' '.$differs;
-                }
-            }while(!$found && $index < count($reports['file1']));
-        }
-
-        return $reports;
-    }
-
 
     /*
         Paul's Simple Diff Algorithm v 0.1

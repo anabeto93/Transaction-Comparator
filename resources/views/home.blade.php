@@ -85,60 +85,62 @@
     </div>
     @endif
 </div>
+<div class="col-md-10 offset-md-1">
 @if(isset($reports) && is_array($reports) && isset($names) && is_array($names))
     <!-- Unmatched Reports Section -->
-    <div class="row row-section" id="unmatchedReportSection">
-        <h4>Unmatched Report</h4>
-        <div class="file-report-table">
-            <span class="file_name">{{ $names['file1'] }}</span>
-            <table class="table table-striped" id="table1">
-                <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Reference</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Similar Reference</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($reports['file1'] as $report)
+        <div class="row row-section" id="unmatchedReportSection">
+            <h4>Unmatched Report</h4>
+            <div class="file-report-table">
+                <span class="file_name">{{ $names['file1'] }}</span>
+                <table class="table table-striped" id="table1">
+                    <thead>
                     <tr>
-                        {{--<th scope="row"></th>--}}
-                        <td>{{ $report['date'] }}</td>
-                        <td>{{ $report['reference'] }}</td>
-                        <td>{{ $report['amount'] }}</td>
-                        <td>{{ $report['advice'] }}</td>
+                        <th scope="col">Date</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Similar Reference</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="file-report-table">
-            <span class="file_name">{{ $names['file2'] }}</span>
-            <table class="table table-striped" id="table2">
-                <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Reference</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Advice</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($reports['file2'] as $report)
+                    </thead>
+                    <tbody>
+                    @foreach($reports['file1'] as $report)
+                        <tr>
+                            {{--<th scope="row"></th>--}}
+                            <td>{{ $report['date'] }}</td>
+                            <td>{{ $report['reference'] }}</td>
+                            <td>{{ $report['amount'] }}</td>
+                            <td>{{ $report['advice'] }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="file-report-table">
+                <span class="file_name">{{ $names['file2'] }}</span>
+                <table class="table table-striped" id="table2">
+                    <thead>
                     <tr>
-                        {{--<th scope="row"></th>--}}
-                        <td>{{ $report['date'] }}</td>
-                        <td>{{ $report['reference'] }}</td>
-                        <td>{{ $report['amount'] }}</td>
-                        <td>{{ $report['advice'] }}</td>
+                        <th scope="col">Date</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Advice</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach($reports['file2'] as $report)
+                        <tr>
+                            {{--<th scope="row"></th>--}}
+                            <td>{{ $report['date'] }}</td>
+                            <td>{{ $report['reference'] }}</td>
+                            <td>{{ $report['amount'] }}</td>
+                            <td>{{ $report['advice'] }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-@endif
+    @endif
+</div>
 @endsection
 
 @push('scripts')
