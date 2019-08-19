@@ -1,8 +1,12 @@
 default:
-#    suites:
-#        authentication:
-#            contexts: [ FeatureContext, AuthenticationContext ]
-#            filters: { tags: '@authentication' }
+    suites:
+        authentication:
+            contexts: [ FeatureContext ]
+            filters: { tags: '@authentication' }
+
+        transaction:
+            contexts: [ TransactionContext ]
+            filters: { tags: '@upload' }
 
     extensions:
         Laracasts\Behat:
@@ -10,3 +14,4 @@ default:
         Behat\MinkExtension:
             default_session: laravel
             laravel: ~
+            files_path: './features/files'

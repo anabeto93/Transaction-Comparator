@@ -26,7 +26,7 @@ class ValidCsvTransactionFileRule implements Rule
      * @return bool
      */
     public function passes($attribute, $value)
-    {
+    {dd(request()->allFiles());
         $required_transaction_headers = [
             "ProfileName",
             "TransactionDate",
@@ -45,7 +45,7 @@ class ValidCsvTransactionFileRule implements Rule
                 $content = Storage::disk('local')->get($attribute);
             }else {
                 request()->file($attribute)->storeAs('tmp',$attribute);
-                $content = Storage::disk('local')->get('tmp/'.$attribute);
+                $content = Storage::disk('local')->get('app/tmp/'.$attribute);
             }
         }catch (\Exception $exception) {
 
