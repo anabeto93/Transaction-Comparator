@@ -86,5 +86,14 @@ There is a shell script in the root directory which will handle this and you can
 
 This project is already been tested before deployment using [Travis](https://travis-ci.org/)
 
+## Allowable Input Files
+The transaction files which are to be uploaded must have 8 columns which correspond to the following
+
+| ProfileName | TransactionDate | TransactionAmount | TransactionNarrative | TransactionDescription | TransactionID | TransactionType | WalletReference |
+|-------------|-----------------|-------------------|----------------------|------------------------|---------------|-----------------|-----------------|
+
+Anything apart from the above format and it will not be be processed or fail validation.
 ## Badges
 [![Build Status](https://travis-ci.org/anabeto93/Transaction-Comparator.svg?branch=master)](https://travis-ci.org/anabeto93/Transaction-Comparator)
+
+[![Documentation Status](https://readthedocs.org/projects/transaction-comparator/badge/?version=latest)](https://transaction-comparator.readthedocs.io/en/latest/?badge=latest)
