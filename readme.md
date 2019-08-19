@@ -76,7 +76,11 @@ You can ignore the above steps and simply run `php artisan serve` to run the app
 But security purposes, following the above steps is strongly advised.
 
 ## Testing
-To test the functionalities of this project, simply run `./phpunit`.
+To test the project works as expected, simply run the following commands.
+```bash
+./phpunit
+./behat
+```
 
 There is a shell script in the root directory which will handle this and you can pass additional arguments to it.
 
