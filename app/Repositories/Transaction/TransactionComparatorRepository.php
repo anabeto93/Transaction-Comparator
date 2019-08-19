@@ -44,6 +44,7 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
         }
 
         $file_contents = [];
+
         foreach($names as $key => $filename) {
             $path = storage_path('app/transactions/'.$filename);
 
@@ -56,35 +57,66 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
             }
         }
 
+        //ensure there are no duplicate transactions in either file
+        $duplicate_transactions = [
+            'file1' => [],
+            'file2' => [],
+        ];
+
+        foreach($file_contents as $key => $file) {
+            $i = $key === 0 ? 'file1' : 'file2';
+            //\Log::info('Duplicates in '.$key, ['duplicates' => array_diff_assoc($file, array_unique(array_values($file)))]);
+            $duplicates = array_diff_assoc($file, array_unique(array_values($file)));
+
+            //remove the duplicated transactions and report on them
+            foreach($duplicates as $duplicate_line => $duplicate) {
+                unset($file_contents[$key][$duplicate_line]);//remove the duplicated transactions
+
+                //report on the duplicate transactions as well
+                $r = $this->generateReportForTransactions(100.00, $duplicate, $duplicate);
+                $r['advice'] = 'Duplicate Transaction on Same file.';
+                array_push($duplicate_transactions[$i], $duplicate);
+
+                array_push($reports, $r);
+            }
+        }
+
         //form the two groups of remnants to test against
         $group_one = $file_contents[0];
         $group_two = $file_contents[1];
 
         //compare each transaction from group_one against those in group_two, starting from the top, do this n times where n=size_of($group_one)
-        foreach($group_one as $i => $transaction) {
+        $keys_to_unset = [];
+        foreach($group_one as $ik => $transaction) {
             foreach($group_two as $j => $other_transaction) {
                 //going by the assumption that transactions match 'perfectly' find the exact match
                 if($transaction === $other_transaction) {
                     //a match has been found, now remove them from both groups to reduce the sample set
-                    unset($group_one[$i]);
-                    //$group_one = array_values($group_one);
+                    array_push($keys_to_unset, $ik);
                     unset($group_two[$j]);
                     $group_two =  array_values($group_two);//reduce the size of group_two
                 }
             }
         }
+
+        foreach($keys_to_unset as $nk => $key) {
+            unset($group_one[$key]);
+        }
+
         //remnants after removing all
-        $group_one = array_values($group_one);
+        $group_one = array_merge(array_values($duplicate_transactions['file1']), array_values($group_one));
+
+        $group_two = array_merge(array_values($duplicate_transactions['file2']), array_values($group_two));
 
         $result = [
             'file1' => [
-                'total' => count($file_contents[0]),
-                'matching' => count($file_contents[0]) - count($group_one),
+                'total' => count($file_contents[0]) + count($duplicate_transactions['file1']),
+                'matching' => count($file_contents[0]) + count($duplicate_transactions['file1']) - count($group_one),
                 'unmatched' => count($group_one)
             ],
             'file2' => [
-                'total' => count($file_contents[1]),
-                'matching' => count($file_contents[1]) - count($group_two),
+                'total' => count($file_contents[1]) + count($duplicate_transactions['file2']),
+                'matching' => count($file_contents[1])+ count($duplicate_transactions['file2']) - count($group_two),
                 'unmatched' => count($group_two)
             ]
         ];
@@ -93,9 +125,9 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
         //find the similarities and where there are possibilities of matching
         foreach([$group_one, $group_two] as $i => $group) {
             if($i===0) {
-                $index = 1; $other_file = 'file2'; $current_file = 'file1';
+                $index = 1; $current_file = 'file1';
             } else {
-                $index = 0; $other_file = 'file1'; $current_file = 'file2';
+                $index = 0; $current_file = 'file2';
             }
 
             if(count($group) <= 0) {
