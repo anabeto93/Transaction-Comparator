@@ -57,7 +57,7 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
             }
         }
 
-        //ensure there are no duplicate transactions in either file
+        //Step 2. Ensure there are no duplicate transactions on the same file in either file
         $duplicate_transactions = [
             'file1' => [],
             'file2' => [],
@@ -65,7 +65,7 @@ class TransactionComparatorRepository implements TransactionComparatorInterface
 
         foreach($file_contents as $key => $file) {
             $i = $key === 0 ? 'file1' : 'file2';
-            //\Log::info('Duplicates in '.$key, ['duplicates' => array_diff_assoc($file, array_unique(array_values($file)))]);
+
             $duplicates = array_diff_assoc($file, array_unique(array_values($file)));
 
             //remove the duplicated transactions and report on them
