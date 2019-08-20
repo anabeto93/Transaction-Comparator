@@ -45,7 +45,7 @@ class ValidCsvTransactionFileRule implements Rule
                 $content = Storage::disk('local')->get($attribute);
             }else {
                 request()->file($attribute)->storeAs('tmp',$attribute);
-                $content = Storage::disk('local')->get('app/tmp/'.$attribute);
+                $content = Storage::disk('local')->get('tmp/'.$attribute);
             }
         }catch (\Exception $exception) {
 
@@ -57,7 +57,6 @@ class ValidCsvTransactionFileRule implements Rule
             if(count($first_line) !== 8) {
                 return false;
             }
-
 
             foreach($required_transaction_headers as $index => $header) {
                 if(strpos($first_line[$index], $header) === false) {
