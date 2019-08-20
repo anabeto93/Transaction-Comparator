@@ -26,7 +26,7 @@ class ValidCsvTransactionFileRule implements Rule
      * @return bool
      */
     public function passes($attribute, $value)
-    {dd(request()->allFiles());
+    {
         $required_transaction_headers = [
             "ProfileName",
             "TransactionDate",
